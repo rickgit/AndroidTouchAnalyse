@@ -31,6 +31,8 @@ public class TouchTextView extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        boolean b = super.onTouchEvent(event);
+        System.out.println("===]]] TouchTextView onTouchEvent " + MotionEventName.ACTION_NAME[event.getAction()] + "   " + b);
+        return b;
     }
 }

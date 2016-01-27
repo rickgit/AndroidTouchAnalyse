@@ -40,6 +40,7 @@ public class TouchFrameLayout extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
 //        return super.onTouchEvent(event);
 //        System.out.println("===]]] TouchFrameLayout onTouchEvent" );
+        System.out.println("===]]] onTouchEvent " + MotionEventName.ACTION_NAME[event.getAction()]);
         return true;
     }
 
@@ -48,7 +49,7 @@ public class TouchFrameLayout extends FrameLayout {
 
         for (int i = 0; i < eventTypes.length; i++) {
             if (ev.getAction() == eventTypes[i]) {
-                System.out.println("===]]] TouchFrameLayout " + eventTypeNames[i]);
+                System.out.println("===]]] TouchFrameLayout onInterceptTouchEvent " + eventTypeNames[i]);
                 if (i == 0) {
                     touchLastPoint[0] = ev.getRawX();
                     touchLastPoint[1] = ev.getRawY();
@@ -66,10 +67,5 @@ public class TouchFrameLayout extends FrameLayout {
             }
         }
         return super.onInterceptTouchEvent(ev);
-    }
-
-    class EventType {
-        public static final String ACTION_DOWN = "ACTION_DOWN", ACTION_MOVE = "ACTION_MOVE", ACTION_UP = "ACTION_UP", ACTION_CANCEL = "ACTION_CANCEL";
-
     }
 }
