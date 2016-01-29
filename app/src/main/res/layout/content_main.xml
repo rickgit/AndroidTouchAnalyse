@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<edu.ptu.androidtouchanalyse.TouchFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<edu.ptu.androidtouchanalyse.view.TouchFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
     tools:context="edu.ptu.androidtouchanalyse.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <edu.ptu.androidtouchanalyse.TouchTextView
+    <edu.ptu.androidtouchanalyse.view.TouchTextView
         android:id="@+id/touch_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,4 +22,4 @@
         android:minWidth="64dp"
         android:text="TEST" />
 
-</edu.ptu.androidtouchanalyse.TouchFrameLayout>
+</edu.ptu.androidtouchanalyse.view.TouchFrameLayout>
