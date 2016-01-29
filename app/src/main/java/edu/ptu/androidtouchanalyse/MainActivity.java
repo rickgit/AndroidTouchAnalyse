@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.touch_tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("onTouch textView");
+                System.out.println("onTouch click");
             }
         });
     }

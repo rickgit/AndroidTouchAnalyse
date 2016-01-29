@@ -14,4 +14,10 @@ public class TouchPointF {
         this.axisY = axisY;
     }
 
+    public float deltaAxisX(float newAxisX){
+        return newAxisX-axisX;
+    }
+    public float deltaAxisY(float newAxisY){
+        return newAxisY-axisY;
+    }
 }
