@@ -36,7 +36,7 @@ public class TouchFrameLayout extends FrameLayout implements SupperViewGroupEven
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
+        return viewGroupAction.handleTouchEvnet(event,this);
     }
 
     @Override

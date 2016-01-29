@@ -1,5 +1,6 @@
 package edu.ptu.androidtouchanalyse.action.impl;
 
+import android.graphics.PointF;
 import android.view.MotionEvent;
 
 import edu.ptu.androidtouchanalyse.action.AbstractAction;
@@ -10,66 +11,68 @@ import edu.ptu.androidtouchanalyse.action.ViewGroupAction;
 import edu.ptu.androidtouchanalyse.config.Conf;
 import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
 
-/**主要使用方法，单例就从简，有啥不妥，可以提下
+/**
+ * 主要使用方法，单例就从简，有啥不妥，可以提下
  * Created by WangAnshu on 2016/1/29.
  */
 public class DetectedTouchInViewToParent {
-    public static DetectedTouchInViewToParent instance=new DetectedTouchInViewToParent();
+    public static DetectedTouchInViewToParent instance = new DetectedTouchInViewToParent();
 
-    public ViewAction innerView;
-    public ViewGroupAction containerView;
+    private ViewAction innerView;
+    private ViewGroupAction containerView;
 
     public ViewAction getInnerView() {
-        synchronized (DetectedTouchInViewToParent.class){
-            if (innerView==null){
-                innerView=createInnerViewAction();
+        synchronized (DetectedTouchInViewToParent.class) {
+            if (innerView == null) {
+                innerView = new InnerViewAction();
             }
         }
         return innerView;
     }
-    public ViewGroupAction getContainerView(){
-        synchronized (DetectedTouchInViewToParent.class){
-            if (containerView==null){
-                containerView=new ContainerViewAction();
+
+    public ViewGroupAction getContainerView() {
+        synchronized (DetectedTouchInViewToParent.class) {
+            if (containerView == null) {
+                containerView = new ContainerViewAction();
             }
         }
         return containerView;
     }
 
     private static ViewAction createInnerViewAction() {
-         return instance.getInnerView();
+        return instance.getInnerView();
     }
 
-    private  static ViewGroupAction createContainerView() {
-       return instance.getContainerView();
+    private static ViewGroupAction createContainerView() {
+        return instance.getContainerView();
     }
 
     final class ContainerViewAction extends AbstractAction implements ViewGroupAction {
         float[] touchLastPoint = new float[2];//touchLastX touchLastY
         int touchPointIndexX = 0;
         int touchPointIndexY = 1;
+        PointF lastPoint = new PointF(0f, 0f);
+
         @Override
-        public boolean handleTouchEvnet(MotionEvent event,SupperViewEvent view) {
-            System.out.println("===]]] onTouchEvent " + MotionEventInfo.ACTION_NAME[event.getAction()]);
+        public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
+            MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "onTouchEvent", event.getAction(), true);
             return true;
         }
 
         @Override
-        public boolean handleInterceptTouchEvent(MotionEvent ev,SupperViewGroupEvent viewGroup) {
-            Class<?> superclass = viewGroup.getClass().getSuperclass();
+        public boolean handleInterceptTouchEvent(MotionEvent ev, SupperViewGroupEvent viewGroup) {
             for (int i = 0; i < MotionEventInfo.ACTION_TYPE.length; i++) {
                 if (ev.getAction() == MotionEventInfo.ACTION_TYPE[i]) {
-                    System.out.println("===]]] TouchFrameLayout onInterceptTouchEvent " + MotionEventInfo.ACTION_NAME[i]);
-                    if (i == 0) {
+                    if (i == MotionEvent.ACTION_DOWN) {
                         touchLastPoint[0] = ev.getRawX();
                         touchLastPoint[1] = ev.getRawY();
                     }
-                    if (i == 1) {
+                    if (i == MotionEvent.ACTION_MOVE) {
                         float dx = ev.getRawX() - touchLastPoint[touchPointIndexX];
                         float dy = ev.getRawY() - touchLastPoint[touchPointIndexY];
                         int scaledTouchSlop = Conf.getInstance().getViewConfiguration().getScaledTouchSlop();
                         if (scaledTouchSlop < Math.abs(dx * dy)) {
-                            System.out.println("===]]] TouchFrameLayout InterceptTouchEvent");
+                            MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "InterceptTouchEvent", i, true);
                             return true;
                         }
                     }
@@ -77,15 +80,18 @@ public class DetectedTouchInViewToParent {
                 }
             }
 
-            return viewGroup.supperOnInterceptTouchEvent(ev);// FIXME: 2016/1/29 父类实现
+            boolean b = viewGroup.supperOnInterceptTouchEvent(ev);
+            MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "InterceptTouchEvent", ev.getAction(), b);
+            return b;// FIXME: 2016/1/29 父类实现
         }
     }
 
-    final class InnerViewAction extends AbstractAction implements ViewAction{
+    final class InnerViewAction extends AbstractAction implements ViewAction {
         @Override
-        public boolean handleTouchEvnet(MotionEvent event,SupperViewEvent view) {
+        public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
             boolean b = view.supperOnTouchEvent(event);// FIXME: 2016/1/29 父类实现
-            System.out.println("===]]] TouchTextView onTouchEvent " + MotionEventInfo.ACTION_NAME[event.getAction()] + "   " + b);
+            b = true;
+            MotionEventInfo.printTouchResult(1, "TouchTextView", "onTouchEvent", event.getAction(), b);
             return b;
         }
     }
