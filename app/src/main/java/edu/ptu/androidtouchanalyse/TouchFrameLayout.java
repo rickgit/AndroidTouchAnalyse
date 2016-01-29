@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 
+import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
+
 /**
  * Created by WangAnshu on 2016/1/27.
  */
@@ -40,7 +42,7 @@ public class TouchFrameLayout extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
 //        return super.onTouchEvent(event);
 //        System.out.println("===]]] TouchFrameLayout onTouchEvent" );
-        System.out.println("===]]] onTouchEvent " + MotionEventName.ACTION_NAME[event.getAction()]);
+        System.out.println("===]]] onTouchEvent " + MotionEventInfo.ACTION_NAME[event.getAction()]);
         return true;
     }
 

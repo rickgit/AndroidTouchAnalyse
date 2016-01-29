@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
+
 /**
  * Created by WangAnshu on 2016/1/27.
  */
@@ -32,7 +34,7 @@ public class TouchTextView extends TextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean b = super.onTouchEvent(event);
-        System.out.println("===]]] TouchTextView onTouchEvent " + MotionEventName.ACTION_NAME[event.getAction()] + "   " + b);
+        System.out.println("===]]] TouchTextView onTouchEvent " + MotionEventInfo.ACTION_NAME[event.getAction()] + "   " + b);
         return b;
     }
 }
