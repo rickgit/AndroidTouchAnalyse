@@ -7,12 +7,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
+import edu.ptu.androidtouchanalyse.action.SupperViewEvent;
+import edu.ptu.androidtouchanalyse.action.ViewAction;
+import edu.ptu.androidtouchanalyse.action.impl.DetectedTouchInViewToParent;
 
 /**
  * Created by WangAnshu on 2016/1/27.
  */
-public class TouchTextView extends TextView {
+public class TouchTextView extends TextView implements SupperViewEvent {
+    public ViewAction viewAction= DetectedTouchInViewToParent.instance.getInnerView();
     //---------------
     public TouchTextView(Context context) {
         super(context);
@@ -33,8 +36,11 @@ public class TouchTextView extends TextView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean b = super.onTouchEvent(event);
-        System.out.println("===]]] TouchTextView onTouchEvent " + MotionEventInfo.ACTION_NAME[event.getAction()] + "   " + b);
-        return b;
+                return viewAction.handleTouchEvnet(event,this);
+    }
+
+    @Override
+    public boolean supperOnTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 }
