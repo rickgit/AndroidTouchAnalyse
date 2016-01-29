@@ -1,4 +1,4 @@
-package edu.ptu.androidtouchanalyse;
+package edu.ptu.androidtouchanalyse.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
