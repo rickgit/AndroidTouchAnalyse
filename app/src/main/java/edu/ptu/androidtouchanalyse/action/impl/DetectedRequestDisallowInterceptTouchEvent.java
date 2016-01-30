@@ -20,7 +20,7 @@ import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
  * </pre>
  * Created by WangAnshu on 2016/1/29.
  */
- class DetectedRequestDisallowInterceptTouchEvent implements DetectedFacede.IDetected {
+class DetectedRequestDisallowInterceptTouchEvent implements DetectedFacede.IDetected {
     public static DetectedRequestDisallowInterceptTouchEvent instance = new DetectedRequestDisallowInterceptTouchEvent();
 
     private ViewAction innerView;
@@ -73,7 +73,7 @@ import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
         @Override
         public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
             boolean b = view.supperOnTouchEvent(event);// FIXME: 2016/1/29 父类实现
-            ((View)view).getParent().requestDisallowInterceptTouchEvent(true);
+            ((View) view).getParent().requestDisallowInterceptTouchEvent(true);
             MotionEventInfo.printTouchResult(1, "TouchTextView", "onTouchEvent", event.getAction(), b);
             return b;
 
