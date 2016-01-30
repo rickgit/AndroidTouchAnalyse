@@ -9,13 +9,13 @@ import android.widget.FrameLayout;
 
 import edu.ptu.androidtouchanalyse.action.SupperViewGroupEvent;
 import edu.ptu.androidtouchanalyse.action.ViewGroupAction;
-import edu.ptu.androidtouchanalyse.action.impl.DetectedTouchInViewToParent;
+import edu.ptu.androidtouchanalyse.action.impl.DetectedFacede;
 
 /**
  * Created by WangAnshu on 2016/1/27.
  */
 public class TouchFrameLayout extends FrameLayout implements SupperViewGroupEvent{
-    public ViewGroupAction viewGroupAction= DetectedTouchInViewToParent.instance.getContainerView();
+    public ViewGroupAction viewGroupAction= DetectedFacede.getInstance().getContainerView();
     //--------------
     public TouchFrameLayout(Context context) {
         super(context);

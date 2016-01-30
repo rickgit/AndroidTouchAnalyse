@@ -1,38 +1,30 @@
 package edu.ptu.androidtouchanalyse.action.impl;
 
 import android.view.MotionEvent;
+import android.view.View;
 
 import edu.ptu.androidtouchanalyse.action.AbstractAction;
 import edu.ptu.androidtouchanalyse.action.SupperViewEvent;
 import edu.ptu.androidtouchanalyse.action.SupperViewGroupEvent;
 import edu.ptu.androidtouchanalyse.action.ViewAction;
 import edu.ptu.androidtouchanalyse.action.ViewGroupAction;
-import edu.ptu.androidtouchanalyse.config.Conf;
 import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
 import edu.ptu.androidtouchanalyse.data.TouchPointF;
 
 /**
- * 主要使用方法，单例就从简，有啥不妥，可以提下
+ * 测试子类调用，移动后取消时间占用
  * <pre>
- *     <ul>
- *         <i>尝试点击里面的按钮（可以是TextView），然后移动到父控件，事件变化</i>
- *         <i>——————————Parent Down {DOWN} 拦截事件</i>
- *         <i>——————————————Child View {MOVE}</i>
- *         <i>——————————————Child View {CANCEL}</i>
- *         <i>——————————Parent View {InterceptTouchEvent} 拦截事件</i>
- *     </ul>
  * </pre>
- * <red>注：即使拦截事件，也会从父控件，onInterceptTouchEvent，传递下来。必须执行完，Child view的UP事件，才会触发onClick事件</red>
  * Created by WangAnshu on 2016/1/29.
  */
-class DetectedTouchInViewToParent implements DetectedFacede.IDetected {
-    public static DetectedTouchInViewToParent instance = new DetectedTouchInViewToParent();
+ class DetectedTouchInViewCancelEvent implements DetectedFacede.IDetected{
+    public static DetectedTouchInViewCancelEvent instance = new DetectedTouchInViewCancelEvent();
 
     private ViewAction innerView;
     private ViewGroupAction containerView;
 
     public ViewAction getInnerView() {
-        synchronized (DetectedTouchInViewToParent.class) {
+        synchronized (DetectedTouchInViewCancelEvent.class) {
             if (innerView == null) {
                 innerView = new InnerViewAction();
             }
@@ -41,7 +33,7 @@ class DetectedTouchInViewToParent implements DetectedFacede.IDetected {
     }
 
     public ViewGroupAction getContainerView() {
-        synchronized (DetectedTouchInViewToParent.class) {
+        synchronized (DetectedTouchInViewCancelEvent.class) {
             if (containerView == null) {
                 containerView = new ContainerViewAction();
             }
@@ -58,8 +50,6 @@ class DetectedTouchInViewToParent implements DetectedFacede.IDetected {
     }
 
     final class ContainerViewAction extends AbstractAction implements ViewGroupAction {
-        TouchPointF touchLastPoint = new TouchPointF();
-
         @Override
         public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
             MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "onTouchEvent", event.getAction(), true);
@@ -68,35 +58,31 @@ class DetectedTouchInViewToParent implements DetectedFacede.IDetected {
 
         @Override
         public boolean handleInterceptTouchEvent(MotionEvent ev, SupperViewGroupEvent viewGroup) {
-            for (int i = 0; i < MotionEventInfo.ACTION_TYPE.length; i++) {
-                if (ev.getAction() == MotionEventInfo.ACTION_TYPE[i]) {
-                    if (i == MotionEvent.ACTION_DOWN) {
-                        touchLastPoint.setAxisX(ev.getRawX());
-                        touchLastPoint.setAxisY(ev.getRawY());
-                    }
-                    if (i == MotionEvent.ACTION_MOVE) {
-                        float dx = touchLastPoint.deltaAxisX(ev.getRawX());
-                        float dy = touchLastPoint.deltaAxisY(ev.getRawY());
-                        int scaledTouchSlop = Conf.getInstance().getViewConfiguration().getScaledTouchSlop();
-                        if (scaledTouchSlop < Math.abs(dx * dy)) {
-                            MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "InterceptTouchEvent", i, true);
-                            return true;
-                        }
-                    }
-                    break;
-                }
-            }
+
 
             boolean b = viewGroup.supperOnInterceptTouchEvent(ev);
+            if (ev.getAction() == MotionEvent.ACTION_MOVE) b = true;//移动时候，尝试拦截事件
             MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "InterceptTouchEvent", ev.getAction(), b);
             return b;// FIXME: 2016/1/29 父类实现
         }
     }
 
     final class InnerViewAction extends AbstractAction implements ViewAction {
+        TouchPointF touchPointF = new TouchPointF();
+
         @Override
         public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
             boolean b = view.supperOnTouchEvent(event);// FIXME: 2016/1/29 父类实现
+            ((View) view).getParent().requestDisallowInterceptTouchEvent(true);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                ((View) view).getParent().requestDisallowInterceptTouchEvent(true);
+                touchPointF.setAxis(event);
+            } else if (MotionEvent.ACTION_MOVE == event.getAction()) {
+                if (touchPointF.isMove(event)) {
+                    ((View) view).getParent().requestDisallowInterceptTouchEvent(false);
+                    event.setAction(MotionEvent.ACTION_CANCEL);
+                }
+            }
             MotionEventInfo.printTouchResult(1, "TouchTextView", "onTouchEvent", event.getAction(), b);
             return b;
 

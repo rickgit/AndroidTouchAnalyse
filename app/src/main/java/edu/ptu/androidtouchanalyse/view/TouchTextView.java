@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import edu.ptu.androidtouchanalyse.action.SupperViewEvent;
 import edu.ptu.androidtouchanalyse.action.ViewAction;
-import edu.ptu.androidtouchanalyse.action.impl.DetectedTouchInViewToParent;
+import edu.ptu.androidtouchanalyse.action.impl.DetectedFacede;
 
 /**
  * Created by WangAnshu on 2016/1/27.
  */
 public class TouchTextView extends TextView implements SupperViewEvent {
-    public ViewAction viewAction= DetectedTouchInViewToParent.instance.getInnerView();
+    public ViewAction viewAction= DetectedFacede.getInstance().getInnerView();
     //---------------
     public TouchTextView(Context context) {
         super(context);

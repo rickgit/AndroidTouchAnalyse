@@ -20,7 +20,7 @@ import edu.ptu.androidtouchanalyse.data.MotionEventInfo;
  * </pre>
  * Created by WangAnshu on 2016/1/29.
  */
-public class DetectedRequestDisallowInterceptTouchEvent {
+ class DetectedRequestDisallowInterceptTouchEvent implements DetectedFacede.IDetected {
     public static DetectedRequestDisallowInterceptTouchEvent instance = new DetectedRequestDisallowInterceptTouchEvent();
 
     private ViewAction innerView;
