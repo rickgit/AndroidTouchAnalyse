@@ -14,7 +14,7 @@ import edu.ptu.androidtouchanalyse.data.TouchPointF;
 /**
  * 测试子类调用，移动后取消事件占用
  * <pre>
- *     1.虽然父控件OnInterceptTouchEvent返回true，事件还是会传到子控件，但是MotionEvent是Cancel
+ *     1.MotionEvent是Cancel,子控件还是会占用事件
  * </pre>
  * Created by WangAnshu on 2016/1/29.
  */
@@ -64,7 +64,7 @@ class DetectedTouchInViewCancelEvent implements DetectedFacede.IDetected {
             boolean b = viewGroup.supperOnInterceptTouchEvent(ev);
             if (ev.getAction() == MotionEvent.ACTION_MOVE) b = true;//移动时候，尝试拦截事件
             MotionEventInfo.printTouchResult(0, "TouchFrameLayout", "InterceptTouchEvent", ev.getAction(), b);
-            return true;// FIXME: 2016/1/29 父类实现
+            return false;// FIXME: 2016/1/29 父类实现
         }
     }
 
@@ -74,7 +74,7 @@ class DetectedTouchInViewCancelEvent implements DetectedFacede.IDetected {
         @Override
         public boolean handleTouchEvnet(MotionEvent event, SupperViewEvent view) {
             boolean b = view.supperOnTouchEvent(event);// FIXME: 2016/1/29 父类实现
-            ((View) view).getParent().requestDisallowInterceptTouchEvent(true);
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 ((View) view).getParent().requestDisallowInterceptTouchEvent(true);
                 touchPointF.setAxis(event);
