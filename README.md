@@ -6,7 +6,7 @@
 
 定义了Action的名称，用来显示在日志里面，方便分析
 <pre>
-class MotionEventName {
+class [MotionEventInfo](https://github.com/rickgit/AndroidTouchAnalyse/blob/master/app/src/main/java/edu/ptu/androidtouchanalyse/data/MotionEventInfo.java) {
     public static String[] ACTION_NAME = {"ACTION_DOWN", "ACTION_UP", "ACTION_MOVE", "ACTION_CANCEL"};
 }
 </pre>
