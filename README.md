@@ -1,4 +1,4 @@
-# AndroidTouchAnalyse
+## AndroidTouchAnalyse
  analyse android touch event
 
 
@@ -13,3 +13,26 @@ class MotionEventInfo{
 
 通过修改方法里面的单例类，修改不同的触摸事件逻辑代码
 [edu.ptu.androidtouchanalyse.action.impl.DetectedFacede#getInstance](https://github.com/rickgit/AndroidTouchAnalyse/blob/master/app/src/main/java/edu/ptu/androidtouchanalyse/action/impl/DetectedFacede.java)
+
+
+##ScrollView
+点击事件在Touch up时候判断，并加入到队列中。
+
+``` java
+    if (!mHasPerformedLongPress && !mIgnoreNextUpEvent) {
+        // This is a tap, so remove the longpress check
+        removeLongPressCallback();
+        // Only perform take click actions if we were in the pressed state
+        if (!focusTaken) {
+            // Use a Runnable and post this rather than calling
+            // performClick directly. This lets other visual state
+            // of the view update before click actions start.
+            if (mPerformClick == null) {
+                mPerformClick = new PerformClick();
+            }
+            if (!post(mPerformClick)) {
+                performClick();
+            }
+        }
+    }
+```
